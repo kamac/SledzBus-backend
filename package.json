@@ -1,0 +1,36 @@
+{
+  "name": "sledzbus-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamac/SledzBus-backend.git"
+  },
+  "author": "Maciej Kozik",
+  "contributors": [
+    {
+      "name": "Kamil Kozik",
+      "url": "https://github.com/kozikkam"
+    },
+    {
+      "name": "Bruno Wieczorek",
+      "url": "https://github.com/burnoo"
+    },
+    {
+      "name": "Tomasz Pepera",
+      "url": "https://github.com/pepedziobas"
+    }
+  ],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kamac/SledzBus-backend/issues"
+  },
+  "homepage": "https://github.com/kamac/SledzBus-backend#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
