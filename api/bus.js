@@ -1,20 +1,37 @@
-var router = require('express').Router()
+var router = require('express').Router();
+var async = require('async');
 
 router.get('/', function(req, res, next) {
-  res.json([
-    {
-      id: 0,
-      name: 'A',
-      x: 55,
-      y: 55
-    },
-    {
-      id: 1,
-      name: 'A',
-      x: 55,
-      y: 55
-    },
-  ])
+  req.models.vehicle.find({}, (err, results) => {
+    if(err) throw err;
+    
+    res.send(results);
+  });
+})
+
+router.get('/test', function(req, res, next) {
+  req.models.vehicle.create({
+    name: 'A',
+    vehicleType: 'Bus'
+  }, (err, msg) => {
+    if (err) throw err;
+
+    let createPositions = [];
+    for(var i = 0; i < 10; i++) {
+      createPositions.push(function(cb) {
+        req.models.vehiclePosition.create({
+          x: Math.random() * 10,
+          y: Math.random() * 10,
+          k: 1,
+          vehicle_id: msg.id
+        }, cb);
+      });
+    }
+    async.series(createPositions, function(err, results) {
+      if(err) throw err;
+      res.send(results);
+    });
+  });
 })
 
 module.exports = router;
