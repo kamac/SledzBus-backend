@@ -2,6 +2,7 @@ const express = require('express');
 const db = require('orm');
 const settings = require('./settings');
 const models = require('./models');
+const updates = require('./mpk-update');
 
 const app = express();
 
