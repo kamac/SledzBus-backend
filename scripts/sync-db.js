@@ -1,3 +1,6 @@
-var sequelize = require("../models/");
+const sequelize = require("../models/db");
+require("../models/");
 
-sequelize.sync({force: true});
+sequelize.authenticate().then(() => {
+    sequelize.sync({force: true});
+});

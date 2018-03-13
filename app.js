@@ -1,4 +1,5 @@
 const express = require('express');
+const sequelize = require('./models/db');
 const settings = require('./settings');
 
 const app = express();
@@ -30,4 +31,8 @@ if (settings.isDebug) {
 
 app.use(require('./api'));
 
-app.listen(3000, () => console.log("It's running on port 3000!"));
+sequelize.authenticate().then(() => {
+  app.listen(3000, () => console.log("It's running on port 3000!"));
+}, (err) => {
+  console.log(err);
+});

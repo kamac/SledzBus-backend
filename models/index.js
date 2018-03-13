@@ -1,7 +1,2 @@
-const Vehicle = require('./vehicle');
-const VehiclePosition = require('./vehicle-position');
-
-module.exports = {
-    Vehicle,
-    VehiclePosition
-};
+exports.Vehicle = require('./vehicle');
+exports.VehiclePosition = require('./vehicle-position');
