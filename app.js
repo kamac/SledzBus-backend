@@ -1,21 +1,7 @@
 const express = require('express');
-const db = require('orm');
 const settings = require('./settings');
-const models = require('./models');
 
 const app = express();
-
-// inject database & models into every request
-app.use(function (req, res, next) {
-  models(function (err, db) {
-    if (err) return next(err);
-
-    req.models = db.models;
-    req.db     = db;
-
-    return next();
-  });
-});
 
 if (settings.isDebug) {
   // development error handler

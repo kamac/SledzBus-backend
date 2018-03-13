@@ -1,4 +1,5 @@
 var router = require('express').Router();
+const { Vehicle, VehiclePosition } = require('../models/');
 var async = require('async');
 
 router.get('/', function(req, res, next) {
