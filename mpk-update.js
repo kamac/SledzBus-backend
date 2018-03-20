@@ -38,7 +38,7 @@ module.exports = async function updatePositions() {
     };
 
     setInterval(() => {
-        requestPositions(busLines).then((body) => { console.log(body)}).catch((e) => {console.log("Request rejected: " + e)});
-        requestPositions(tramwayLines).then((body) => { console.log(body)}).catch((e) => {console.log("Request rejected: " + e)});
+        requestPositions(busLines).then((body) => { return body}).catch((e) => {console.log("Request rejected: " + e)});
+        requestPositions(tramwayLines).then((body) => { return body}).catch((e) => {console.log("Request rejected: " + e)});
     }, queryInterval);
 };
