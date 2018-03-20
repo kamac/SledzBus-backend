@@ -1,4 +1,6 @@
-const queryInterval = 10000;
+// logs two dicts of bus and tramway positions every queryInterval miliseconds
+
+const queryInterval = 7000;
 
 async function requestPositions(formData) {
     const result = await new Promise((resolve, reject) => {
@@ -18,9 +20,9 @@ async function requestPositions(formData) {
         });
     });
     return result;
-}
+};
 
-function updatePositions() {
+module.exports = async function updatePositions(fun) {
     const busLines = {
         'busList[bus][]': [
             100, 101, 103, 104, 105, 107, 109, 110, 113, 114, 115, 116, 118,
@@ -36,9 +38,11 @@ function updatePositions() {
     };
 
     setInterval(() => {
-        requestPositions(busLines).then((body) => { console.log(body)}).catch((e) => {console.log("Request rejected: " + e)});
-        requestPositions(tramwayLines).then((body) => { console.log(body)}).catch((e) => {console.log("Request rejected: " + e)});
+        requestPositions(busLines)
+            .then((body) => fun(body))
+            .catch((e) => {console.log("Request rejected: " + e)});
+        requestPositions(tramwayLines)
+            .then((body) => fun(body))
+            .catch((e) => {console.log("Request rejected: " + e)});
     }, queryInterval);
-}
-
-updatePositions();
+};

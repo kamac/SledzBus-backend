@@ -1,7 +1,7 @@
 const express = require('express');
 const sequelize = require('./models/db');
 const settings = require('./settings');
-
+const updates = require('./mpk-update');
 const app = express();
 
 if (settings.isDebug) {
