@@ -6,11 +6,13 @@ router.get('/', function(req, res, next) {
   Vehicle.findAll().then((vehicles) => {
     res.send(vehicles);
   });
-})
+});
 
-router.get('/test', function(req, res, next) {
+/*router.get('/test', function(req, res, next) {
+  // destroy all vehicles
   Vehicle.destroy({ where: {} });
 
+  // create a new vehicle, then fill it's positions with 10 random positions
   Vehicle.create({
     name: 'A',
     vehicleType: 'Bus'
@@ -26,6 +28,6 @@ router.get('/test', function(req, res, next) {
       v.setPositions(results).then(() => res.send(v));
     });
   });
-})
+})*/
 
 module.exports = router;
