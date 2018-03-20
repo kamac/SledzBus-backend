@@ -1,37 +1,33 @@
 var router = require('express').Router();
-var async = require('async');
+const async = require('async');
+const { Vehicle, VehiclePosition } = require('../models/');
 
 router.get('/', function(req, res, next) {
-  req.models.vehicle.find({}, (err, results) => {
-    if(err) throw err;
-    
-    res.send(results);
+  Vehicle.findAll().then((vehicles) => {
+    res.send(vehicles);
   });
-})
+});
 
-router.get('/test', function(req, res, next) {
-  req.models.vehicle.create({
+/*router.get('/test', function(req, res, next) {
+  // destroy all vehicles
+  Vehicle.destroy({ where: {} });
+
+  // create a new vehicle, then fill it's positions with 10 random positions
+  Vehicle.create({
     name: 'A',
     vehicleType: 'Bus'
-  }, (err, msg) => {
-    if (err) throw err;
-
-    let createPositions = [];
-    for(var i = 0; i < 10; i++) {
-      createPositions.push(function(cb) {
-        req.models.vehiclePosition.create({
-          x: Math.random() * 10,
-          y: Math.random() * 10,
-          k: 1,
-          vehicle_id: msg.id
-        }, cb);
-      });
-    }
-    async.series(createPositions, function(err, results) {
-      if(err) throw err;
-      res.send(results);
+  }).then(v => {
+    async.series(Array(10).fill(null).map(x => (callback) => {
+      VehiclePosition.create({
+        x: Math.random() * 10,
+        y: Math.random() * 10,
+        k: 1,
+        posDate: new Date()
+      }).then((p) => callback(null, p), (err) => callback(err));
+    }), (err, results) => {
+      v.setPositions(results).then(() => res.send(v));
     });
   });
-})
+})*/
 
 module.exports = router;

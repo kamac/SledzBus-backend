@@ -1,10 +1,21 @@
-module.exports = function(orm, db) {
-  var Vehicle = db.define("vehicle", {
-    name: { type: 'text', required: true },
-    vehicleType: { type: "enum", values: ['Bus', 'Tram'], required: true }
-  }, {
-    validations: {
-      name: orm.enforce.ranges.length(1, 100)
+const Sequelize = require('sequelize');
+const sequelize = require('./db');
+const VehiclePosition = require('./vehicle-position');
+
+const Vehicle = sequelize.define('Vehicle', {
+  name: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate: {
+        len: [1,100]
     }
-  });
-}
+  },
+  vehicleType: {
+    type: Sequelize.ENUM('Bus', 'Tram'),
+    allowNull: false
+  }
+});
+
+Vehicle.hasMany(VehiclePosition, {as: 'positions'});
+
+module.exports = Vehicle;
