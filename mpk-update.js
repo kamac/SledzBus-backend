@@ -22,7 +22,7 @@ async function requestPositions(formData) {
     return result;
 };
 
-module.exports = async function updatePositions() {
+module.exports = async function updatePositions(fun) {
     const busLines = {
         'busList[bus][]': [
             100, 101, 103, 104, 105, 107, 109, 110, 113, 114, 115, 116, 118,
@@ -38,7 +38,11 @@ module.exports = async function updatePositions() {
     };
 
     setInterval(() => {
-        requestPositions(busLines).then((body) => { return body}).catch((e) => {console.log("Request rejected: " + e)});
-        requestPositions(tramwayLines).then((body) => { return body}).catch((e) => {console.log("Request rejected: " + e)});
+        requestPositions(busLines)
+            .then((body) => fun(body))
+            .catch((e) => {console.log("Request rejected: " + e)});
+        requestPositions(tramwayLines)
+            .then((body) => fun(body))
+            .catch((e) => {console.log("Request rejected: " + e)});
     }, queryInterval);
 };
