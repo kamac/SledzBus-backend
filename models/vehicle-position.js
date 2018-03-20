@@ -1,16 +1,21 @@
-module.exports = function(orm, db) {
-  var VehiclePosition = db.define("vehiclePosition", {
-    x: { type: 'number', required: true, size: 8 },
-    y: { type: 'number', required: true, size: 8 },
-    k: { type: 'integer', required: true },
-    posDate: { type: 'date', required: true }
-  }, {
-    hooks: {
-      beforeValidation: function () {
-        this.posDate = new Date();
-      }
-    }
-  });
+const Sequelize = require('sequelize');
+const sequelize = require('./db');
 
-  VehiclePosition.hasOne('vehicle', db.models.vehicle, { required: true, reverse: 'positions' });
-}
+module.exports = sequelize.define('vehiclePosition', {
+  x: {
+    type: Sequelize.DOUBLE,
+    allowNull: false
+  },
+  y: {
+    type: Sequelize.DOUBLE,
+    allowNull: false
+  },
+  k: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  },
+  posDate: {
+    type: Sequelize.DATE,
+    allowNull: false
+  }
+});

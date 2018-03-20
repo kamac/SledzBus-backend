@@ -1,8 +1,10 @@
+let isDebug = process.env.NODE_ENV !== 'production'; 
+
 let settings = {
-    isDebug: process.env.NODE_ENV !== 'production',
+    isDebug: isDebug,
     port : process.env.NODE_PORT || 3000,
     database: {
-        protocol: 'mysql',
+        protocol: isDebug ? 'sqlite' : 'mysql',
         query: { pool: true },
         host: process.env.DB_HOST,
         name: process.env.DB_NAME,
