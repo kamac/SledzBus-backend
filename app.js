@@ -32,6 +32,7 @@ if (settings.isDebug) {
 app.use(require('./api'));
 
 sequelize.authenticate().then(() => {
+  updates();
   app.listen(settings.port, () => console.log(`It's running on port ${settings.port}!`));
 }, (err) => {
   console.error(err);

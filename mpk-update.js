@@ -1,5 +1,6 @@
 // logs two dicts of bus and tramway positions every queryInterval miliseconds
 
+const { Vehicle, VehiclePosition } = require('./models/');
 const queryInterval = 7000;
 
 async function requestPositions(formData) {
@@ -22,7 +23,26 @@ async function requestPositions(formData) {
     return result;
 };
 
-module.exports = async function updatePositions(fun) {
+function onPositionsLoaded(positions) {
+    for(let i = 0; i < positions.length; i++) {
+        let position = positions[i];
+        Vehicle.findCreateFind({where: {name: position.name, model: position.k}, defaults: {
+            name: position.name,
+            model: positions.k,
+            vehicleType: position.type.charAt(0).toUpperCase() + position.type.substr(1)
+        }}).spread((vehicle, created) => {
+            VehiclePosition.create({
+                x: position.x,
+                y: position.y,
+                posDate: new Date()
+            }).then(p => {
+                vehicle.addPosition(p).catch((err) => console.error(err));
+            }, (err) => console.error(err));
+        });
+    }
+}
+
+module.exports = async function updatePositions() {
     const busLines = {
         'busList[bus][]': [
             100, 101, 103, 104, 105, 107, 109, 110, 113, 114, 115, 116, 118,
@@ -39,10 +59,10 @@ module.exports = async function updatePositions(fun) {
 
     setInterval(() => {
         requestPositions(busLines)
-            .then((body) => fun(body))
-            .catch((e) => {console.log("Request rejected: " + e)});
+            .then((body) => onPositionsLoaded(JSON.parse(body)))
+            .catch((e) => console.warn("Request rejected: " + e));
         requestPositions(tramwayLines)
-            .then((body) => fun(body))
-            .catch((e) => {console.log("Request rejected: " + e)});
+            .then((body) => onPositionsLoaded(JSON.parse(body)))
+            .catch((e) => console.warn("Request rejected: " + e));
     }, queryInterval);
 };

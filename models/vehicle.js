@@ -3,6 +3,10 @@ const sequelize = require('./db');
 const VehiclePosition = require('./vehicle-position');
 
 const Vehicle = sequelize.define('Vehicle', {
+  model: {
+    type: Sequelize.INTEGER.UNSIGNED,
+    allowNull: false
+  },
   name: {
     type: Sequelize.STRING,
     allowNull: false,
