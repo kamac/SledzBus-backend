@@ -8,15 +8,37 @@ router.get('/', function(req, res, next) {
   VehiclePosition.findAll({
     where: {
       createdAt: {
-        [Op.gte]: moment().subtract(10, 'minutes').toDate()
+        [Op.gte]: moment().subtract(1, 'minutes').toDate()
       }
     },
     order: [
       ['posDate', 'DESC']
     ]
   }).then((vehiclePositions) => {
-    console.log(vehiclePositions);
-    res.send(vehiclePositions);
+    let vehicleIds = [];
+    for(let i = 0; i < vehiclePositions.length; i++) {
+      if(vehicleIds.indexOf(vehiclePositions[i].VehicleId) === -1) {
+        vehicleIds.push(vehiclePositions[i].VehicleId);
+      }
+    }
+    Vehicle.findAll({
+      where: {
+        id: {
+          [Op.in]: vehicleIds
+        }
+      }
+    }).then(vehicles => {
+      let answer = vehicles.map(v => { return {
+        name: v.name,
+        model: v.model,
+        positions: vehiclePositions.filter(p => p.VehicleId == v.id).map(p => { return {
+          x: p.x,
+          y: p.y,
+          posDate: p.posDate
+        }})
+      }});
+      res.send(answer);
+    })
   });
 });
 

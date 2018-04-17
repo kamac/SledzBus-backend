@@ -31,13 +31,17 @@ function onPositionsLoaded(positions) {
             model: positions.k,
             vehicleType: position.type.charAt(0).toUpperCase() + position.type.substr(1)
         }}).spread((vehicle, created) => {
-            VehiclePosition.create({
-                x: position.x,
-                y: position.y,
-                posDate: new Date()
-            }).then(p => {
-                vehicle.addPosition(p).catch((err) => console.error(err));
-            }, (err) => console.error(err));
+            vehicle.update({
+                lastSeen: new Date()
+            }).then(() => {
+                VehiclePosition.create({
+                    x: position.x,
+                    y: position.y,
+                    posDate: new Date()
+                }).then(p => {
+                    vehicle.addPosition(p).catch((err) => console.error(err));
+                }, (err) => console.error(err));
+            });
         });
     }
 }
@@ -59,10 +63,16 @@ module.exports = async function updatePositions() {
 
     setInterval(() => {
         requestPositions(busLines)
-            .then((body) => onPositionsLoaded(JSON.parse(body)))
+            .then((body) => {
+                onPositionsLoaded(JSON.parse(body));
+                shouldRefreshAPIAnswer = true;
+            })
             .catch((e) => console.warn("Request rejected: " + e));
-        requestPositions(tramwayLines)
-            .then((body) => onPositionsLoaded(JSON.parse(body)))
-            .catch((e) => console.warn("Request rejected: " + e));
+        /*requestPositions(tramwayLines)
+            .then((body) => {
+                onPositionsLoaded(JSON.parse(body));
+                shouldRefreshAPIAnswer = true;
+            })
+            .catch((e) => console.warn("Request rejected: " + e));*/
     }, queryInterval);
 };

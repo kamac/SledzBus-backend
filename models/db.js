@@ -16,6 +16,7 @@ module.exports = new Sequelize(dbs.name, dbs.user, dbs.password, {
 
     // SQLite only
     storage: './dev.sqlite',
+    logging: false,
 
     // http://docs.sequelizejs.com/manual/tutorial/querying.html#operators
     operatorsAliases: false
