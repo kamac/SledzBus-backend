@@ -1,11 +1,11 @@
 // logs two dicts of bus and tramway positions every queryInterval miliseconds
 
+const request = require('request');
 const { Vehicle, VehiclePosition } = require('./models/');
 const queryInterval = 7000;
 
 async function requestPositions(formData) {
     const result = await new Promise((resolve, reject) => {
-        const request = require('request');
         const headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1'
         };
