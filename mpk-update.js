@@ -31,17 +31,13 @@ function onPositionsLoaded(positions) {
             model: positions.k,
             vehicleType: position.type.charAt(0).toUpperCase() + position.type.substr(1)
         }}).spread((vehicle, created) => {
-            vehicle.update({
-                lastSeen: new Date()
-            }).then(() => {
-                VehiclePosition.create({
-                    x: position.x,
-                    y: position.y,
-                    posDate: new Date()
-                }).then(p => {
-                    vehicle.addPosition(p).catch((err) => console.error(err));
-                }, (err) => console.error(err));
-            });
+            VehiclePosition.create({
+                x: position.x,
+                y: position.y,
+                posDate: new Date()
+            }).then(p => {
+                vehicle.addPosition(p).catch((err) => console.error(err));
+            }, (err) => console.error(err));
         });
     }
 }

@@ -17,9 +17,6 @@ const Vehicle = sequelize.define('Vehicle', {
   vehicleType: {
     type: Sequelize.ENUM('Bus', 'Tram'),
     allowNull: false
-  },
-  lastSeen: {
-    type: Sequelize.DATE
   }
 });
 
