@@ -2,19 +2,21 @@ var router = require('express').Router();
 const async = require('async');
 const { Vehicle, VehiclePosition } = require('../models/');
 const { Op } = require('sequelize');
+var moment = require('moment');
 
 router.get('/', function(req, res, next) {
-  Vehicle.findAll({
-    include: [{
-      model: VehiclePosition,
-      attributes: ['x', 'y', 'posDate'],
-      as: 'positions'
-    }],
+  VehiclePosition.findAll({
+    where: {
+      createdAt: {
+        [Op.gte]: moment().subtract(10, 'minutes').toDate()
+      }
+    },
     order: [
-     [Vehicle.associations.positions, 'posDate', 'DESC']
+      ['posDate', 'DESC']
     ]
-  }).then((vehicles) => {
-    res.send(vehicles);
+  }).then((vehiclePositions) => {
+    console.log(vehiclePositions);
+    res.send(vehiclePositions);
   });
 });
 

@@ -2,7 +2,7 @@
 
 const request = require('request');
 const { Vehicle, VehiclePosition } = require('./models/');
-const queryInterval = 7000;
+const queryInterval = 10000;
 
 async function requestPositions(formData) {
     const result = await new Promise((resolve, reject) => {
