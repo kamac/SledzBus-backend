@@ -4,30 +4,25 @@ const { Vehicle, VehiclePosition } = require('../models/');
 const { Op } = require('sequelize');
 var moment = require('moment');
 
-router.get('/:id?', async (req, res, next) => {
-  if(req.params.id)
-    res.params.id = parseInt(req.params.id);
-  else
-    req.params.id = -1;
-
+async function getBusList(req, res, next, selectedId) {
   try {
     let vehiclePositions = await VehiclePosition.findAll({
       where: {
           [Op.or]: [
             {
               createdAt: {
-                [Op.gte]: moment().subtract(10, 'minutes').toDate()
+                [Op.gte]: moment().subtract(5, 'minutes').toDate()
               },
               VehicleId: {
-                [Op.eq]: req.params.id
+                [Op.eq]: selectedId
               }
             },
             {
               createdAt: {
-                [Op.gte]: moment().subtract(40, 'seconds').toDate()
+                [Op.gte]: moment().subtract(20, 'seconds').toDate()
               },
               VehicleId: {
-                [Op.ne]: req.params.id
+                [Op.ne]: selectedId
               }
             }
           ]
@@ -65,6 +60,14 @@ router.get('/:id?', async (req, res, next) => {
   } catch (e) {
     next(e);
   }
+}
+
+router.get('/:id', (req, res, next) => {
+  getBusList(req, res, next, req.params.id);
+});
+
+router.get('/', (req, res, next) => {
+  getBusList(req, res, next, -1);
 });
 
 module.exports = router;
