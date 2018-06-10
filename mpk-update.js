@@ -7,6 +7,7 @@ const queryInterval = 10000;
 const logUpToNLastPositions = 5;
 const deg2rad = 0.01745329252;
 var lastPositions = { };
+var lastSpeeds = { };
 
 function haversine(lon1, lat1, lon2, lat2) {
     /*
@@ -47,10 +48,11 @@ async function requestPositions(formData) {
 function onPositionsLoaded(positions) {
     for(let i = 0; i < positions.length; i++) {
         let position = positions[i];
+        let vehicleType = position.type.charAt(0).toUpperCase() + position.type.substr(1);
         Vehicle.findCreateFind({where: {name: position.name, model: position.k}, defaults: {
             name: position.name,
             model: positions.k,
-            vehicleType: position.type.charAt(0).toUpperCase() + position.type.substr(1)
+            vehicleType: vehicleType
         }}).spread((vehicle, created) => {
             // log position
             if(!lastPositions[vehicle.id])
@@ -93,12 +95,12 @@ module.exports = {
                     shouldRefreshAPIAnswer = true;
                 })
                 .catch((e) => console.warn("Request rejected: " + e));
-            /*requestPositions(tramwayLines)
+            requestPositions(tramwayLines)
                 .then((body) => {
                     onPositionsLoaded(JSON.parse(body));
                     shouldRefreshAPIAnswer = true;
                 })
-                .catch((e) => console.warn("Request rejected: " + e));*/
+                .catch((e) => console.warn("Request rejected: " + e));
         }, queryInterval);
     },
 

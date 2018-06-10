@@ -1,11 +1,10 @@
-var router = require('express').Router();
 const async = require('async');
 const { Vehicle, VehiclePosition } = require('../models/');
 const { Op } = require('sequelize');
 const { getSpeed } = require('../mpk-update');
 var moment = require('moment');
 
-async function getBusList(req, res, next, selectedId) {
+async function getVehicleList(req, res, next, selectedId) {
   try {
     let vehiclePositions = await VehiclePosition.findAll({
       where: {
@@ -56,6 +55,7 @@ async function getBusList(req, res, next, selectedId) {
         y: p.y,
         posDate: p.posDate
       }}),
+      type: v.vehicleType,
       speed: getSpeed(v.id)
     }});
     res.send(answer);
@@ -64,12 +64,13 @@ async function getBusList(req, res, next, selectedId) {
   }
 }
 
+var router = require('express').Router();
 router.get('/:id', (req, res, next) => {
-  getBusList(req, res, next, req.params.id);
+  getVehicleList(req, res, next, req.params.id);
 });
 
 router.get('/', (req, res, next) => {
-  getBusList(req, res, next, -1);
+  getVehicleList(req, res, next, -1);
 });
 
 module.exports = router;
