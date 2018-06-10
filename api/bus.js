@@ -2,6 +2,7 @@ var router = require('express').Router();
 const async = require('async');
 const { Vehicle, VehiclePosition } = require('../models/');
 const { Op } = require('sequelize');
+const { getSpeed } = require('../mpk-update');
 var moment = require('moment');
 
 async function getBusList(req, res, next, selectedId) {
@@ -54,7 +55,8 @@ async function getBusList(req, res, next, selectedId) {
         x: p.x,
         y: p.y,
         posDate: p.posDate
-      }})
+      }}),
+      speed: getSpeed(v.id)
     }});
     res.send(answer);
   } catch (e) {
